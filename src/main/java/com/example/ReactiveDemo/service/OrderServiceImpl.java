@@ -2,12 +2,15 @@ package com.example.ReactiveDemo.service;
 
 import com.example.ReactiveDemo.controller.DTO.OrderDTO;
 import com.example.ReactiveDemo.controller.DTO.ProductOrderDTO;
+import com.example.ReactiveDemo.errors.concrete.InsufficientStockException;
+import com.example.ReactiveDemo.errors.concrete.OrderFinalizedException;
+import com.example.ReactiveDemo.errors.concrete.OrderNotFoundException;
+import com.example.ReactiveDemo.errors.concrete.ProductNotFoundException;
 import com.example.ReactiveDemo.pulsarConfig.alerts.LowStockAlertEvent;
 import com.example.ReactiveDemo.pulsarConfig.implementations.StockAlertPublisher;
 import com.example.ReactiveDemo.repository.OrderItemsRepository;
 import com.example.ReactiveDemo.repository.OrderRepository;
 import com.example.ReactiveDemo.repository.ProductRepository;
-import com.example.ReactiveDemo.repository.UserRepository;
 import com.example.ReactiveDemo.repository.entities.OrderEntity;
 import com.example.ReactiveDemo.repository.entities.OrderItemsEntity;
 import com.example.ReactiveDemo.repository.entities.OrderStatus;
@@ -59,8 +62,8 @@ public class OrderServiceImpl implements OrderService {
     public Mono<OrderDTO> getOrderByOrderId(UUID userId, UUID orderId) {
         return orderRepo.findById(orderId)
                 .filter(order -> order.getUserId().equals(userId))
-                .switchIfEmpty(Mono.error(new IllegalArgumentException("Order not found")))
-                .flatMap(this::toDTOWithProducts);
+                .flatMap(this::toDTOWithProducts)
+                .switchIfEmpty(Mono.error(new OrderNotFoundException()));
     }
 
     // Difficult to implement correctly
@@ -70,11 +73,9 @@ public class OrderServiceImpl implements OrderService {
     public Mono<OrderDTO> finalizeOrder(UUID userId, UUID orderId) {
         return orderRepo.findById(orderId)
                 .filter(order -> order.getUserId().equals(userId))
-                .switchIfEmpty(Mono.error(new IllegalStateException("Order not found")))
                 .flatMap(order -> {
-
                     if (order.getStatus() != OrderStatus.IN_PROGRESS) {
-                        return Mono.error(new IllegalStateException("Order already finalized"));
+                        return Mono.error(new OrderFinalizedException());
                     }
 
                     return orderItemsRepo.findByOrderId(order.getId())
@@ -85,21 +86,19 @@ public class OrderServiceImpl implements OrderService {
                                 return orderRepo.save(order);
                             }))
                             .flatMap(this::toDTOWithProducts);
-                });
+                })
+                .switchIfEmpty(Mono.error(new OrderNotFoundException()));
     }
 
 
     // Helper function to validate a product and reduce its stock in the DB
     private Mono<LowStockAlertEvent> validateAndReduceStock(OrderItemsEntity item) {
         return productRepo.findById(item.getProductId())
-                .switchIfEmpty(Mono.error(new IllegalStateException("Product not found")))
                 .flatMap(product -> {
 
                     if (product.getAvailableQuantity() < item.getQuantity()) {
                         return Mono.error(
-                                new IllegalStateException(
-                                        "Insufficient stock for product " + product.getId()
-                                )
+                                new InsufficientStockException()
                         );
                     }
 
@@ -115,7 +114,8 @@ public class OrderServiceImpl implements OrderService {
                                     ) : null
                             )
                     );
-                });
+                })
+                .switchIfEmpty(Mono.error(new ProductNotFoundException()));
     }
 
     // Mapping function to convert an entity to DTO
@@ -139,7 +139,6 @@ public class OrderServiceImpl implements OrderService {
                         .build());
     }
 
-    // Function to add a product to a user's basket for a particular order
     @Override
     public Mono<OrderDTO> addProductToOrder(
             UUID userId,
@@ -148,15 +147,17 @@ public class OrderServiceImpl implements OrderService {
             int quantity
     ) {
         return orderRepo.findById(orderId)
+                .switchIfEmpty(Mono.error(new OrderNotFoundException()))
                 .filter(order -> order.getUserId().equals(userId))
-                .switchIfEmpty(Mono.error(new IllegalStateException("Order not found")))
+                .switchIfEmpty(Mono.error(new OrderNotFoundException()))
                 .flatMap(order -> {
+
                     if (order.getStatus() != OrderStatus.IN_PROGRESS) {
-                        return Mono.error(new IllegalStateException("Cannot modify finalized order"));
+                        return Mono.error(new OrderFinalizedException());
                     }
 
                     return productRepo.findById(productId)
-                            .switchIfEmpty(Mono.error(new IllegalStateException("Product not found")))
+                            .switchIfEmpty(Mono.error(new ProductNotFoundException()))
                             .flatMap(product -> {
 
                                 OrderItemsEntity item = OrderItemsEntity.builder()

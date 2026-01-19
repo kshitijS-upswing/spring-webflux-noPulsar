@@ -1,6 +1,9 @@
 package com.example.ReactiveDemo.service;
 
 import com.example.ReactiveDemo.controller.DTO.ProductDTO;
+import com.example.ReactiveDemo.errors.concrete.InsufficientStockException;
+import com.example.ReactiveDemo.errors.concrete.ProductAlreadyExistsException;
+import com.example.ReactiveDemo.errors.concrete.ProductNotFoundException;
 import com.example.ReactiveDemo.repository.ProductRepository;
 import com.example.ReactiveDemo.repository.entities.ProductEntity;
 import com.example.ReactiveDemo.service.implementations.ProductService;
@@ -23,8 +26,7 @@ public class ProductServiceImpl implements ProductService {
         return productRepo.existsByName(productName)
                 .flatMap(exists -> {
                     if (exists) {
-                        return Mono.error(new IllegalStateException(
-                                "Product by same name already exists"));
+                        return Mono.error(new ProductAlreadyExistsException());
                     }
 
                     return productRepo.save(
@@ -74,17 +76,13 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public Mono<ProductDTO> updateStock(UUID productId, int delta) {
         return productRepo.findById(productId)
-                .switchIfEmpty(Mono.error(new IllegalStateException(
-                        "Product does not exist with id = " + productId
-                )))
+                .switchIfEmpty(Mono.error(new ProductNotFoundException()))
                 .flatMap(product -> {
                     int currentQty = product.getAvailableQuantity();
                     int newQty = currentQty + delta;
 
                     if (newQty < 0) {
-                        return Mono.error(new IllegalStateException(
-                                "Insufficient stock. Current stock = " + currentQty
-                        ));
+                        return Mono.error(new InsufficientStockException());
                     }
 
                     product.setAvailableQuantity(newQty);

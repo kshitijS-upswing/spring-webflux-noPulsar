@@ -1,6 +1,8 @@
 package com.example.ReactiveDemo.service;
 
 import com.example.ReactiveDemo.controller.DTO.UserDTO;
+import com.example.ReactiveDemo.errors.concrete.EmailAlreadyInUseException;
+import com.example.ReactiveDemo.errors.concrete.UserNotFoundException;
 import com.example.ReactiveDemo.repository.UserRepository;
 import com.example.ReactiveDemo.repository.entities.UserEntity;
 import com.example.ReactiveDemo.service.implementations.UserService;
@@ -23,7 +25,7 @@ public class UserServiceImpl implements UserService {
                 .hasElement()
                 .flatMap(exists -> {
                     if (exists) {
-                        return Mono.error(new IllegalStateException("Email already exists"));
+                        return Mono.error(new EmailAlreadyInUseException());
                     }
                     return userRepo.save(
                             UserEntity.builder()
@@ -48,7 +50,7 @@ public class UserServiceImpl implements UserService {
                         .build()
                 )
                 .switchIfEmpty(
-                        Mono.error(new RuntimeException("User not found with userId: " + userId))
+                        Mono.error(new UserNotFoundException())
                 );
     }
 
@@ -61,7 +63,7 @@ public class UserServiceImpl implements UserService {
                         .build()
                 )
                 .switchIfEmpty(
-                        Mono.error(new RuntimeException("User not found with email: " + email))
+                        Mono.error(new UserNotFoundException())
                 );
     }
 
