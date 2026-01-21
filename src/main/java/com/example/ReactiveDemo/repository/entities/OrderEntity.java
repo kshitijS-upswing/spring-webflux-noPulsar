@@ -24,14 +24,12 @@ public class OrderEntity {
     @Column("user_id")
     private UUID userId;
 
-    // 🔥 This is what gets persisted
     @Column("status")
     private Integer statusCode;
 
     @Column("created_at")
-    private OffsetDateTime createdAt;
+    private Instant createdAt;
 
-    // 🧠 Domain-friendly accessors
     @Transient
     public OrderStatus getStatus() {
         return OrderStatus.fromCode(statusCode);

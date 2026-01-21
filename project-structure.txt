@@ -1,0 +1,225 @@
+.
+├── HELP.md
+├── build
+│   ├── classes
+│   │   └── java
+│   │       ├── main
+│   │       │   └── com
+│   │       │       └── example
+│   │       │           └── ReactiveDemo
+│   │       │               ├── ReactiveDemoApplication.class
+│   │       │               ├── controller
+│   │       │               │   ├── DTO
+│   │       │               │   │   ├── OrderDTO$OrderDTOBuilder.class
+│   │       │               │   │   ├── OrderDTO.class
+│   │       │               │   │   ├── ProductDTO$ProductDTOBuilder.class
+│   │       │               │   │   ├── ProductDTO.class
+│   │       │               │   │   ├── ProductOrderDTO$ProductOrderDTOBuilder.class
+│   │       │               │   │   ├── ProductOrderDTO.class
+│   │       │               │   │   ├── UserDTO$UserDTOBuilder.class
+│   │       │               │   │   └── UserDTO.class
+│   │       │               │   ├── OrderController.class
+│   │       │               │   ├── OrderControllerImpl.class
+│   │       │               │   ├── ProductControllerImpl.class
+│   │       │               │   ├── UserControllerImpl.class
+│   │       │               │   ├── implementations
+│   │       │               │   │   ├── ProductController.class
+│   │       │               │   │   └── UserController.class
+│   │       │               │   └── requests
+│   │       │               │       ├── AddProductToOrderRequest.class
+│   │       │               │       ├── CreateProductRequest.class
+│   │       │               │       ├── CreateUserRequest.class
+│   │       │               │       └── UpdateStockRequest.class
+│   │       │               ├── errors
+│   │       │               │   ├── GlobalExceptionHandler.class
+│   │       │               │   ├── concrete
+│   │       │               │   │   ├── EmailAlreadyInUseException.class
+│   │       │               │   │   ├── InsufficientStockException.class
+│   │       │               │   │   ├── OrderFinalizedException.class
+│   │       │               │   │   ├── OrderNotFoundException.class
+│   │       │               │   │   ├── ProductAlreadyExistsException.class
+│   │       │               │   │   ├── ProductNotFoundException.class
+│   │       │               │   │   └── UserNotFoundException.class
+│   │       │               │   └── nonConcrete
+│   │       │               │       ├── ApiError.class
+│   │       │               │       └── GeneralException.class
+│   │       │               ├── pulsarConfig
+│   │       │               │   ├── StockAlertPublisherImpl.class
+│   │       │               │   ├── StockAlertSubscriberImpl.class
+│   │       │               │   ├── alerts
+│   │       │               │   │   └── LowStockAlertEvent.class
+│   │       │               │   └── implementations
+│   │       │               │       └── StockAlertPublisher.class
+│   │       │               ├── repository
+│   │       │               │   ├── OrderItemsRepository.class
+│   │       │               │   ├── OrderRepository.class
+│   │       │               │   ├── ProductRepository.class
+│   │       │               │   ├── UserRepository.class
+│   │       │               │   └── entities
+│   │       │               │       ├── OrderEntity$OrderEntityBuilder.class
+│   │       │               │       ├── OrderEntity.class
+│   │       │               │       ├── OrderItemsEntity$OrderItemsEntityBuilder.class
+│   │       │               │       ├── OrderItemsEntity.class
+│   │       │               │       ├── OrderStatus.class
+│   │       │               │       ├── ProductEntity$ProductEntityBuilder.class
+│   │       │               │       ├── ProductEntity.class
+│   │       │               │       ├── UserEntity$UserEntityBuilder.class
+│   │       │               │       └── UserEntity.class
+│   │       │               └── service
+│   │       │                   ├── OrderServiceImpl.class
+│   │       │                   ├── ProductServiceImpl.class
+│   │       │                   ├── UserServiceImpl.class
+│   │       │                   └── implementations
+│   │       │                       ├── OrderService.class
+│   │       │                       ├── ProductService.class
+│   │       │                       └── UserService.class
+│   │       └── test
+│   │           └── com
+│   │               └── example
+│   │                   └── ReactiveDemo
+│   │                       └── ReactiveDemoApplicationTests.class
+│   ├── generated
+│   │   └── sources
+│   │       ├── annotationProcessor
+│   │       │   └── java
+│   │       │       ├── main
+│   │       │       └── test
+│   │       └── headers
+│   │           └── java
+│   │               ├── main
+│   │               └── test
+│   ├── libs
+│   │   ├── ReactiveDemo-0.0.1-SNAPSHOT-plain.jar
+│   │   └── ReactiveDemo-0.0.1-SNAPSHOT.jar
+│   ├── reports
+│   │   └── tests
+│   │       └── test
+│   │           ├── classes
+│   │           │   └── com.example.ReactiveDemo.ReactiveDemoApplicationTests.html
+│   │           ├── css
+│   │           │   ├── base-style.css
+│   │           │   └── style.css
+│   │           ├── index.html
+│   │           ├── js
+│   │           │   └── report.js
+│   │           └── packages
+│   │               └── com.example.ReactiveDemo.html
+│   ├── resolvedMainClassName
+│   ├── resources
+│   │   └── main
+│   │       ├── application.properties
+│   │       └── db
+│   │           └── migration
+│   │               ├── V1__Tables.sql
+│   │               └── V2__enumChange.sql
+│   ├── test-results
+│   │   └── test
+│   │       ├── TEST-com.example.ReactiveDemo.ReactiveDemoApplicationTests.xml
+│   │       └── binary
+│   │           ├── output.bin
+│   │           ├── output.bin.idx
+│   │           └── results.bin
+│   └── tmp
+│       ├── bootJar
+│       │   └── MANIFEST.MF
+│       ├── compileJava
+│       │   ├── compileTransaction
+│       │   │   ├── backup-dir
+│       │   │   └── stash-dir
+│       │   │       ├── OrderServiceImpl.class.uniqueId1
+│       │   │       ├── ProductServiceImpl.class.uniqueId0
+│       │   │       └── UserServiceImpl.class.uniqueId2
+│       │   └── previous-compilation-data.bin
+│       ├── compileTestJava
+│       │   └── previous-compilation-data.bin
+│       ├── jar
+│       │   └── MANIFEST.MF
+│       └── test
+├── build.gradle
+├── docker-compose.yml
+├── gradle
+│   └── wrapper
+│       ├── gradle-wrapper.jar
+│       └── gradle-wrapper.properties
+├── gradlew
+├── gradlew.bat
+├── project-structure.txt
+├── settings.gradle
+└── src
+    ├── main
+    │   ├── java
+    │   │   └── com
+    │   │       └── example
+    │   │           └── ReactiveDemo
+    │   │               ├── ReactiveDemoApplication.java
+    │   │               ├── controller
+    │   │               │   ├── DTO
+    │   │               │   │   ├── OrderDTO.java
+    │   │               │   │   ├── ProductDTO.java
+    │   │               │   │   ├── ProductOrderDTO.java
+    │   │               │   │   └── UserDTO.java
+    │   │               │   ├── OrderControllerImpl.java
+    │   │               │   ├── ProductControllerImpl.java
+    │   │               │   ├── UserControllerImpl.java
+    │   │               │   ├── implementations
+    │   │               │   │   ├── OrderController.java
+    │   │               │   │   ├── ProductController.java
+    │   │               │   │   └── UserController.java
+    │   │               │   └── requests
+    │   │               │       ├── AddProductToOrderRequest.java
+    │   │               │       ├── CreateProductRequest.java
+    │   │               │       ├── CreateUserRequest.java
+    │   │               │       └── UpdateStockRequest.java
+    │   │               ├── errors
+    │   │               │   ├── GlobalExceptionHandler.java
+    │   │               │   ├── concrete
+    │   │               │   │   ├── EmailAlreadyInUseException.java
+    │   │               │   │   ├── InsufficientStockException.java
+    │   │               │   │   ├── OrderFinalizedException.java
+    │   │               │   │   ├── OrderNotFoundException.java
+    │   │               │   │   ├── ProductAlreadyExistsException.java
+    │   │               │   │   ├── ProductNotFoundException.java
+    │   │               │   │   └── UserNotFoundException.java
+    │   │               │   └── nonConcrete
+    │   │               │       ├── ApiError.java
+    │   │               │       └── GeneralException.java
+    │   │               ├── pulsarConfig
+    │   │               │   ├── StockAlertPublisherImpl.java
+    │   │               │   ├── StockAlertSubscriberImpl.java
+    │   │               │   ├── alerts
+    │   │               │   │   └── LowStockAlertEvent.java
+    │   │               │   └── implementations
+    │   │               │       └── StockAlertPublisher.java
+    │   │               ├── repository
+    │   │               │   ├── OrderItemsRepository.java
+    │   │               │   ├── OrderRepository.java
+    │   │               │   ├── ProductRepository.java
+    │   │               │   ├── UserRepository.java
+    │   │               │   └── entities
+    │   │               │       ├── OrderEntity.java
+    │   │               │       ├── OrderItemsEntity.java
+    │   │               │       ├── OrderStatus.java
+    │   │               │       ├── ProductEntity.java
+    │   │               │       └── UserEntity.java
+    │   │               └── service
+    │   │                   ├── OrderServiceImpl.java
+    │   │                   ├── ProductServiceImpl.java
+    │   │                   ├── UserServiceImpl.java
+    │   │                   └── implementations
+    │   │                       ├── OrderService.java
+    │   │                       ├── ProductService.java
+    │   │                       └── UserService.java
+    │   └── resources
+    │       ├── application.properties
+    │       └── db
+    │           └── migration
+    │               ├── V1__Tables.sql
+    │               └── V2__enumChange.sql
+    └── test
+        └── java
+            └── com
+                └── example
+                    └── ReactiveDemo
+                        └── ReactiveDemoApplicationTests.java
+
+90 directories, 133 files
